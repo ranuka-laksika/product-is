@@ -53,7 +53,6 @@
 
 4. Transition to docs-is repository:
    - After fully understanding the issue from product-is, switch to working in the docs-is repository
-   - Clone or checkout the docs-is repository if not already done
    - Use appropriate API calls or git commands to work with the docs-is repository
 
 5. Branching (work directly in docs-is repo):

@@ -37,7 +37,7 @@ jobs:
           ISSUE_NUMBER=$(echo "$ISSUE_JSON" | jq -r .number)
           echo "oldest_issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
           
-      - name: Update labels and trigger Claude
+      - name: Update labels and trigger Claude 
         if: steps.get_oldest_queued.outputs.oldest_issue_number != ''
         env: 
           GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
