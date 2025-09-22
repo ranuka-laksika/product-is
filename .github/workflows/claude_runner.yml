@@ -103,7 +103,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          REPOSITORY: ${{ vars.DOC_FIXING_AGENT_REPOSITORY }}
+          REPOSITORY: ${{ vars.DOC_FIXING_AGENT_REPOSITORY_ISSUE }}
         with:
           anthropic_api_key: ${{ secrets.DOC_FIXING_AGENT_ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
