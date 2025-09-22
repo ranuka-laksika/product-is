@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 
 
-      - name: Install GitHub CLI
+      - name: Install GitHub CLI 
         run: |
-          sudo apt-get update
+          sudo apt-get update 
           sudo apt-get install -y gh jq 
-
+ 
       - name: Get the Oldest Issue with AI-Agent/Queued label
         id: get_oldest_queued
         env:
@@ -58,7 +58,7 @@ jobs:
       - name: Checkout original repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ vars.DOC_FIXING_AGENT_REPOSITORY }}  
+          repository: ${{ vars.DOC_FIXING_AGENT_REPOSITORY }}  // docs-is 
           token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           fetch-depth: 0 
 
