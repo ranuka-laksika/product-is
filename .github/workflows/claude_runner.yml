@@ -58,7 +58,7 @@ jobs:
       - name: Checkout original repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ vars.DOC_FIXING_AGENT_REPOSITORY }}  // docs-is 
+          repository: ${{ vars.DOC_FIXING_AGENT_REPOSITORY }}  
           token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           fetch-depth: 0 
 
