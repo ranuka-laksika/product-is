@@ -28,7 +28,7 @@ jobs:
         if: steps.check_manual_label.outputs.manual_label == 'false'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.DOC_FIXING_AGENT_ANTHROPIC_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
@@ -92,7 +92,7 @@ jobs:
           fi
 
       - name: Dispatch to docs-is if labeled
-        if: steps.check_manual_label.outputs.manual_label == 'true' || contains(github.event.issue.labels.*.name, 'AI-Agent/Queued')
+        if: steps.check_manual_label.outputs.manual_label == 'false' || contains(github.event.issue.labels.*.name, 'AI-Agent/Queued')
         env:
           GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
