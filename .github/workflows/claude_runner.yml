@@ -103,6 +103,7 @@ jobs:
           
           # Return to main workspace
           cd $GITHUB_WORKSPACE
+          ls -la
           
       - name: Prepare system prompt with environment variables
         id: prepare_prompt
