@@ -61,13 +61,6 @@ jobs:
           echo "ISSUE_NUMBER=${{ github.event.issue.number }}" >> $GITHUB_ENV
           echo "LATEST_VERSION=${{ vars.DOC_FIXING_AGENT_LATEST_VERSION }}" >> $GITHUB_ENV
 
-      # First checkout the main workspace directory (this is where Claude will start)
-      - name: Checkout base workspace
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
-          fetch-depth: 0
-
       # Then checkout the repositories in separate directories
       - name: Checkout source repository (product-is)
         uses: actions/checkout@v4
@@ -98,11 +91,13 @@ jobs:
           echo "GitHub Workspace: $GITHUB_WORKSPACE"
           # Configure git for product-is
           cd $GITHUB_WORKSPACE/product-is
+          ls -la
           git config user.name "${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
           git config user.email "${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
           
           # Configure git for docs-is
           cd $GITHUB_WORKSPACE/docs-is
+          ls -la
           git config user.name "${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
           git config user.email "${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
           
