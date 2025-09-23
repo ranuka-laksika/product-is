@@ -140,9 +140,12 @@ jobs:
           # Process the system prompt with variable substitution
           cd $PRODUCT_IS_PATH
           SYSTEM_PROMPT=$(envsubst < .github/claude/system_prompt.txt)
+
+          # Save to GitHub env
+          echo "SYSTEM_PROMPT<<EOF" >> $GITHUB_ENV
+          echo "$SYSTEM_PROMPT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           
-          # Save to temporary file that Claude will read
-          echo "$SYSTEM_PROMPT" > $GITHUB_WORKSPACE/processed_prompt.txt
           
           # Print environment for debugging
           echo "Environment variables set:"
