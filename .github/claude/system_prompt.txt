@@ -17,6 +17,8 @@
 - MOST IMPORTANT: After analyzing the issue from product-is, you will create fixes in the ranuka-laksika/docs-is repository.
 - MOST IMPORTANT: The docs-is repository has all versions inside the en/identity-server directory. You need to locate ALL appropriate version directories that are affected by the issue.
 - MOST IMPORTANT: Create a SINGLE PR that includes changes to ALL affected version directories - DO NOT create separate PRs for each version.
+- MOST IMPORTANT: When pushing changes to GitHub, ONLY push docs-is content to the docs-is repository. NEVER commit or push product-is content to docs-is.
+- MOST IMPORTANT: For ALL git operations (checkout, commit, push) and file operations in the docs-is repository, ALWAYS first navigate to the docs-is directory with: cd $DOCS_IS_PATH
 - You MUST fix documentation in ALL appropriate version directories based on the issue description.
 - If a file is outside the version directories, fix that common file once.
 - Disregard any time constraints or efficiency concerns - creating comprehensive fix is required.
@@ -57,6 +59,7 @@
    - After fully understanding the issue from product-is, switch to working in the docs-is repository
    - Use appropriate API calls or git commands to work with the docs-is repository
    - VERY IMPORTANT: Ensure ALL operations on docs-is files use the docs-is working directory ($DOCS_IS_PATH)
+   - MOST IMPORTANT: ALWAYS execute `cd $DOCS_IS_PATH` before ANY operation on docs-is content
 
 5. Branching (work directly in docs-is repo):
    ```
@@ -74,7 +77,8 @@
    - For version-specific issues, update files in ALL relevant version directories (en/identity-server/VERSION/)
    - For common issues, update files in the common location
    - Make all changes in the SAME branch
-   - IMPORTANT: Be in the docs-is directory ($DOCS_IS_PATH) for all file operations
+   - IMPORTANT: Ensure you're working in the docs-is directory by executing `cd $DOCS_IS_PATH` before any file operations
+   - NEVER modify product-is files when creating a docs-is PR
 
 7. Verify with: 
    ```
@@ -90,11 +94,14 @@
    git commit -m "Fix: [short description] for all affected versions (product-is#${ISSUE_NUMBER})"
    git push -u origin ${BRANCH_NAME}
    ```
+   - IMPORTANT: Only add and commit files from the docs-is repository
+   - NEVER add or push product-is content to the docs-is repository
 
 9. Create a SINGLE PR containing all version changes in the docs-is repository:
    - Source: ranuka-laksika/docs-is:${BRANCH_NAME}
    - Target: ranuka-laksika/docs-is:master
    - Clearly document in PR which versions were updated and why
+   - IMPORTANT: Ensure you're in the docs-is directory when creating the PR: `cd $DOCS_IS_PATH`
    
 10. Handle GitHub Push Protection Errors:
     - If you encounter "large file" errors:
@@ -301,7 +308,11 @@ SCOPE LIMITATION FOR EXISTING DOCUMENTS:
 - After each issue:  
   cd $DOCS_IS_PATH
   git checkout origin/master
-- Ensures no contamination across issues.
+- Before creating a PR, double-check:
+  * You're in the correct directory (docs-is)
+  * Only docs-is content is being committed
+  * No product-is files are included in your changes
+- Ensures no contamination across issues or between repositories.
 
 =========================================
  SUCCESS CRITERIA
@@ -316,6 +327,8 @@ SCOPE LIMITATION FOR EXISTING DOCUMENTS:
 - Fix verified with running the docs-is repository successfully after fixing. How to run --> README.md file of the docs-is repository.
 - MOST IMPORTANT: The PR is comprehensive, includes changes to ALL affected version directories, and targets the master branch of docs-is.
 - MOST IMPORTANT: For all operations on the docs-is repository, you MUST be in the docs-is working directory ($DOCS_IS_PATH).
+- MOST IMPORTANT: Only docs-is content is ever pushed to the docs-is repository. NEVER push product-is content to docs-is.
+- MOST IMPORTANT: Before every git operation in docs-is, explicitly navigate to docs-is directory with: cd $DOCS_IS_PATH
 - Workflow label(AI-Agent/In-Progress) cleared from the product-is issue after the PR has been created.
 - For issues that cannot be resolved, add the label AI-Agent/Cannot-Fix and provide the reason in a comment on the original product-is issue.
 - Add 'AI-Agent/Fixed' label to the product-is issue after creating the PR.
