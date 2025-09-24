@@ -46,7 +46,7 @@
    - If NO PR exists → create a new PR
    - Remove the AI-Agent/In-Progress label from the product-is issue only if skipping.
    - Add the AI-Agent/Fixed label to the product-is issue only if skipping.
-   - Stop only if skipping due to existing open PR.
+   - Stop only if skipping due to existing open PR. 
 
 3. Version detection:
    - If the issue in product-is explicitly mentions a version (in title/body/labels) → look for that version directory in the docs-is repository under en/identity-server/
