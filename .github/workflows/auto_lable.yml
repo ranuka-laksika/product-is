@@ -24,7 +24,19 @@ jobs:
             ISSUE_TITLE: ${{ github.event.issue.title }}
             ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
-           echo "Sending issue to Claude for classification..."
+           # First check if the issue has the Type/Docs label
+           echo "Checking if issue has Type/Docs label..."
+           
+           LABELS=$(gh issue view $ISSUE_NUMBER --repo ${{ github.repository }} --json labels --jq '.labels[].name')
+           echo "Issue labels: $LABELS"
+           
+           # Check if Type/Docs label exists
+           if ! echo "$LABELS" | grep -q "Type/Docs"; then
+             echo "Issue does not have Type/Docs label. Skipping Claude classification."
+             exit 0
+           fi
+           
+           echo "Issue has Type/Docs label. Sending issue to Claude for classification..."
 
             # Build JSON payload safely with jq to escape newlines/quotes
             PROMPT="You are a GitHub issue classifier for documentation fixes. IMPORTANT: You can fix these specific types of issues:
