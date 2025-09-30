@@ -9,20 +9,20 @@ on:
 
 concurrency:
   group: doc-fixing-ai-agent
-  cancel-in-progress: false 
+  cancel-in-progress: false
 
 jobs:
   get_issue_and_assign:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
 
-      - name: Install GitHub CLI 
+      - name: Install GitHub CLI
         run: |
-          sudo apt-get update 
+          sudo apt-get update
           sudo apt-get install -y gh jq 
- 
+
       - name: Get the Oldest Issue with AI-Agent/Queued label
         id: get_oldest_queued
         env:
@@ -37,7 +37,7 @@ jobs:
           ISSUE_NUMBER=$(echo "$ISSUE_JSON" | jq -r .number)
           echo "oldest_issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
           
-      - name: Update labels and trigger Claude 
+      - name: Update labels and trigger Claude
         if: steps.get_oldest_queued.outputs.oldest_issue_number != ''
         env: 
           GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
@@ -55,43 +55,23 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.comment.body, '@wso2-engineering-bot')
     steps:
-      - name: Set environment variables
-        id: set_env_vars
-        run: |
-          echo "ISSUE_NUMBER=${{ github.event.issue.number }}" >> $GITHUB_ENV
-          echo "LATEST_VERSION=${{ vars.DOC_FIXING_AGENT_LATEST_VERSION }}" >> $GITHUB_ENV
-
-      # Then checkout the repositories in separate directories
-      - name: Checkout source repository (product-is)
+      - name: Checkout original repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository }}
+          repository: ${{ vars.DOC_FIXING_AGENT_REPOSITORY }}  
           token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
-          path: product-is
-          fetch-depth: 0
-      
-      - name: Checkout target repository (docs-is)
-        uses: actions/checkout@v4
-        with:
-          repository: ranuka-laksika/docs-is
-          token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
-          path: docs-is
-          fetch-depth: 0
+          fetch-depth: 0 
 
-      # Set working directory paths explicitly
-      - name: Set repository paths
+      - name: Configure git for commits
         run: |
-          echo "PRODUCT_IS_PATH=$GITHUB_WORKSPACE/product-is" >> $GITHUB_ENV
-          echo "DOCS_IS_PATH=$GITHUB_WORKSPACE/docs-is" >> $GITHUB_ENV
-
-      # Configure git globally in the main workspace first
-      - name: Configure git globally
-        run: |
-          git config --global user.name "${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
-          git config --global user.email "${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
-
-          cd $GITHUB_WORKSPACE
+          # Show current remotes for debugging
+          echo "Current remotes:"
+          git remote -v
           
+          # Configure git for commits
+          git config user.name ${{secrets.DOC_FIXING_AGENT_GIT_USER_NAME}}
+          git config user.email ${{secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL}}
+
       - name: Prepare system prompt with environment variables
         id: prepare_prompt
         run: |
@@ -102,35 +82,67 @@ jobs:
           
           # Export environment variables for substitution
           export ISSUE_NUMBER="${{ github.event.issue.number }}"
-          export LATEST_VERSION="${{ vars.DOC_FIXING_AGENT_LATEST_VERSION }}"
-          export GIT_USER_NAME="${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
-          export GIT_USER_EMAIL="${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
-          export PRODUCT_IS_PATH="$PRODUCT_IS_PATH"
-          export DOCS_IS_PATH="$DOCS_IS_PATH"
+          export REPOSITORY="${{ vars.DOC_FIXING_AGENT_REPOSITORY }}"
+          export LATEST_VERSION="${{ vars.DOC_FIXING_AGENT_LATEST_VERSION }}"  
           
           # Process the system prompt with variable substitution
-          cd $PRODUCT_IS_PATH
-          pwd
-          SYSTEM_PROMPT=$(envsubst < .github/claude/system_prompt.txt)
-
+          SYSTEM_PROMPT=$(envsubst < ${{github.workspace}}/.github/claude/system_prompt.txt)
+          
           # Save to GitHub env
           echo "SYSTEM_PROMPT<<EOF" >> $GITHUB_ENV
           echo "$SYSTEM_PROMPT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-        
+          
+          # Also set these for Claude
+          echo "ISSUE_NUMBER=$ISSUE_NUMBER" >> $GITHUB_ENV
+          echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+
       - name: Run Claude
         id: run_claude
         uses: anthropics/claude-code-action@v1
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          LATEST_VERSION: ${{ vars.DOC_FIXING_AGENT_LATEST_VERSION }}
-          PRODUCT_IS_PATH: ${{ github.workspace }}/product-is
-          DOCS_IS_PATH: ${{ github.workspace }}/docs-is
+          REPOSITORY: ${{ vars.DOC_FIXING_AGENT_REPOSITORY }}
         with:
           anthropic_api_key: ${{ secrets.DOC_FIXING_AGENT_ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           prompt: ${{ env.SYSTEM_PROMPT }}
           trigger_phrase: "@wso2-engineering-bot" 
           claude_args: |
-            --allowedTools "Bash(*),Bash(git:*),Bash(mkdocs:*),Bash(python3:*),Bash(pip3:*),WebFetch,WebSearch,mcp__github__create_pull_request,mcp__github__get_issue,mcp__github__search_pull_requests,mcp__github__list_branches,Edit,Read,Write,mcp__github__update_issue,mcp__github__create_branch,mcp__github__add_issue_comment,mcp__github__get_file_contents"
+            --allowedTools "Bash(*),Bash(git:*),Bash(mkdocs:*),Bash(python3:*),Bash(pip3:*),WebFetch,mcp__github__create_pull_request,mcp__github__get_issue,mcp__github__search_pull_requests,mcp__github__list_branches,Edit,Read,Write,mcp__github__update_issue,mcp__github__create_branch,mcp__github__add_issue_comment,mcp__github__get_file_contents,mcp__github__get_issue_comments"
             --model claude-sonnet-4-20250514
+
+      - name: Get next queued issue
+        id: get_next_queued
+        env:
+          GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
+        run: |
+          ISSUE_JSON=$(gh issue list --label "AI-Agent/Queued" --state open --json number,createdAt --limit 100 \
+            | jq '[.[]] | sort_by(.createdAt) | .[0]')
+          if [ "$ISSUE_JSON" = "null" ] || [ -z "$ISSUE_JSON" ]; then
+            echo "next_issue_number=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          NEXT_ISSUE_NUMBER=$(echo "$ISSUE_JSON" | jq -r .number)
+          echo "next_issue_number=$NEXT_ISSUE_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: Exit if no queued issues
+        if: steps.get_next_queued.outputs.next_issue_number == ''
+        run: |
+          echo "No queued issues."
+          exit 0
+
+      - name: Update labels and trigger Claude
+        env: 
+          GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
+        if: steps.get_next_queued.outputs.next_issue_number != ''
+        run: | 
+          ISSUE=${{ steps.get_next_queued.outputs.next_issue_number }}
+
+          # Remove AI-Agent/Queued, add AI-Agent/In-Progress
+          gh issue edit $ISSUE --remove-label "AI-Agent/Queued"
+          gh issue edit $ISSUE --add-label "AI-Agent/In-Progress"
+
+          # Add trigger comment for Claude
+          gh issue comment $ISSUE --body "@wso2-engineering-bot create a PR for this issue following repo conventions"
