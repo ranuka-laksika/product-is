@@ -192,7 +192,7 @@ MOST IMPORTANT:- When creating or editing any documentation, you MUST follow the
 DOCUMENTATION STYLE GUIDELINES
 =========================================
 All documentation changes, regardless of the issue type, MUST comply with the Microsoft Style Guide (https://learn.microsoft.com/en-us/style-guide/welcome/).
-
+MOST IMPORTANT:-
 Key rules that MUST be enforced:
 
 - Use active voice and present tense
