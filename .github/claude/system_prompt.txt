@@ -114,26 +114,11 @@
 - Clearly document in PR which versions were updated and why
 - IMPORTANT: Ensure you're in the docs-is directory when creating the PR: `cd $DOCS_IS_PATH`
 
-10. Handle GitHub Push Protection Errors:
- - If you encounter "large file" errors:
-   * Check for accidentally added large files with `git status` and `git ls-files -s | sort -n -k 2`
-   * Remove any large files and commit again
-   * If the fix itself is inherently large, split into smaller commits or note in PR that manual intervention is needed
- 
- - If you encounter "secret scanning" errors:
-   * Review your changes to ensure no secrets or sensitive data is included
-   * Check for accidentally included tokens, passwords, keys, etc.
-   * If you're certain there are no secrets, note in PR that manual intervention is needed
- 
- - If you encounter other push protection errors:
-   * Document the specific error in the PR and your attempt to resolve it
-   * Continue with the workflow as best you can
+10. Add comment to original product-is issue with link to the created PR.
 
-11. Add comment to original product-is issue with link to the created PR.
+11. Remove workflow label (AI-Agent/In-Progress) from product-is issue.
 
-12. Remove workflow label (AI-Agent/In-Progress) from product-is issue.
-
-13. Add 'AI-Agent/Fixed' label to product-is issue.
+12. Add 'AI-Agent/Fixed' label to product-is issue.
 
 =========================================
 LABEL-BASED PROCESSING
