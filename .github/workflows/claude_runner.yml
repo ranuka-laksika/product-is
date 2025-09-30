@@ -103,6 +103,8 @@ jobs:
           # Export environment variables for substitution
           export ISSUE_NUMBER="${{ github.event.issue.number }}"
           export LATEST_VERSION="${{ vars.DOC_FIXING_AGENT_LATEST_VERSION }}"
+          export GIT_USER_NAME="${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
+          export GIT_USER_EMAIL="${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
           export PRODUCT_IS_PATH="$PRODUCT_IS_PATH"
           export DOCS_IS_PATH="$DOCS_IS_PATH"
           
