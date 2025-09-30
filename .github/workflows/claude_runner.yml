@@ -83,44 +83,13 @@ jobs:
         run: |
           echo "PRODUCT_IS_PATH=$GITHUB_WORKSPACE/product-is" >> $GITHUB_ENV
           echo "DOCS_IS_PATH=$GITHUB_WORKSPACE/docs-is" >> $GITHUB_ENV
-          
-          # Print directory structure for verification
-          echo "Directory structure:"
-          ls -la $GITHUB_WORKSPACE
-          echo "Product-IS directory:"
-          ls -la $GITHUB_WORKSPACE/product-is
-          echo "Docs-IS directory:"
-          ls -la $GITHUB_WORKSPACE/docs-is
 
       # Configure git globally in the main workspace first
       - name: Configure git globally
         run: |
           git config --global user.name "${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
           git config --global user.email "${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
-          echo "Global git config set to:"
-          git config --global --get user.name
-          git config --global --get user.email
 
-      # Then configure git for each repository specifically
-      - name: Configure git for repositories
-        run: |
-          # Configure git for product-is
-          cd $PRODUCT_IS_PATH
-          git config user.name "${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
-          git config user.email "${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
-          echo "Product-IS git config set to:"
-          git config --get user.name
-          git config --get user.email
-          
-          # Configure git for docs-is
-          cd $DOCS_IS_PATH
-          git config user.name "${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
-          git config user.email "${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
-          echo "Docs-IS git config set to:"
-          git config --get user.name
-          git config --get user.email
-          
-          # Return to main workspace
           cd $GITHUB_WORKSPACE
           
       - name: Prepare system prompt with environment variables
@@ -146,14 +115,6 @@ jobs:
           echo "SYSTEM_PROMPT<<EOF" >> $GITHUB_ENV
           echo "$SYSTEM_PROMPT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          
-          
-          # Print environment for debugging
-          echo "Environment variables set:"
-          echo "ISSUE_NUMBER: $ISSUE_NUMBER"
-          echo "LATEST_VERSION: $LATEST_VERSION"
-          echo "PRODUCT_IS_PATH: $PRODUCT_IS_PATH"
-          echo "DOCS_IS_PATH: $DOCS_IS_PATH"
         
       - name: Run Claude
         id: run_claude
