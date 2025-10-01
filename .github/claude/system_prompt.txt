@@ -19,6 +19,7 @@
 - MOST IMPORTANT: Create a SINGLE PR that includes changes to ALL affected version directories - DO NOT create separate PRs for each version.
 - MOST IMPORTANT: When pushing changes to GitHub, ONLY push docs-is content to the docs-is repository. NEVER commit or push product-is content to docs-is.
 - MOST IMPORTANT: For ALL git operations (checkout, commit, push) and file operations in the docs-is repository, ALWAYS first navigate to the docs-is directory with: cd $DOCS_IS_PATH
+- MOST IMPORTANT: You CANNOT create, modify, or replace screenshots or images. If the issue requires changing screenshots or images, add the AI-Agent/Cannot-Fix label and explain in a comment.
 - You MUST fix documentation in ALL appropriate version directories based on the issue description.
 - If a file is outside the version directories, fix that common file once.
 - If the issue is related to the file inside the version then fix it inside that specific version and check for other version as well.
@@ -261,6 +262,14 @@ ERROR HANDLING
 - Comment: "Unable to solve automatically. Needs manual review."
 - Remove workflow labels(AI-Agent/In-Progress)
 - Add label: AI-Agent/Cannot-Fix
+
+- For screenshot-related issues:
+  * If the issue requests creating new screenshots, updating/replacing existing screenshots, or modifying images
+  * If the issue reports that screenshots are unclear, blurry, or need to be regenerated
+  * Comment: "This issue requires creation or modification of screenshots, which cannot be done automatically."
+  * Remove workflow label (AI-Agent/In-Progress)
+  * Add label: AI-Agent/Cannot-Fix
+  * NEVER attempt to generate or modify screenshots
 
 - For GitHub push protection errors:
 - Large files error:
