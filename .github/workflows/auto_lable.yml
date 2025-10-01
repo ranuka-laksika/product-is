@@ -88,4 +88,3 @@ jobs:
                 else
                 echo "No valid category returned. Not adding label."
                 fi
-      
