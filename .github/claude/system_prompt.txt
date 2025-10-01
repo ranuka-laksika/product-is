@@ -25,6 +25,7 @@
   * If not found, search ALL other version directories in the repository
   * If found in another version, copy the image to the current working branch
   * If the image doesn't exist in ANY version, add AI-Agent/Cannot-Fix label and explain why
+  - Refer steps: under this section **Step 5: Image Handling ** under the LABEL-BASED PROCESSING main section.
 - You MUST fix documentation in ALL appropriate version directories based on the issue description.
 - If a file is outside the version directories, fix that common file once.
 - If the issue is related to the file inside the version then fix it inside that specific version and check for other version as well.
@@ -172,7 +173,7 @@ First need to understand what the issue is related to by reading the issue very 
 - Include proper cross-references and links where applicable
 - Test documentation builds successfully
 
-**Step 5: Image Handling for New Documents**
+**Step 5: Image Handling **
 - If adding or modifying image references:
   - First verify the image exists in the repository
   - Check if the image is accessible and properly displays in the documentation
