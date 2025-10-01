@@ -140,13 +140,23 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
         run: |
-          ISSUE_JSON=$(gh issue list --label "AI-Agent/Queued" --state open --json number,createdAt --limit 100 \
+          # Switch to product-is directory
+          cd $PRODUCT_IS_PATH
+          
+          # Get the next queued issue from the product-is repository
+          ISSUE_JSON=$(gh issue list --repo ${{ github.repository }} --label "AI-Agent/Queued" --state open --json number,createdAt --limit 100 \
             | jq '[.[]] | sort_by(.createdAt) | .[0]')
+          
+          echo "Checking for next queued issue in ${{ github.repository }}..."
+          
           if [ "$ISSUE_JSON" = "null" ] || [ -z "$ISSUE_JSON" ]; then
+            echo "No queued issues found."
             echo "next_issue_number=" >> $GITHUB_OUTPUT
             exit 0
           fi
+          
           NEXT_ISSUE_NUMBER=$(echo "$ISSUE_JSON" | jq -r .number)
+          echo "Found next queued issue: #$NEXT_ISSUE_NUMBER"
           echo "next_issue_number=$NEXT_ISSUE_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Exit if no queued issues
@@ -160,11 +170,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
         if: steps.get_next_queued.outputs.next_issue_number != ''
         run: | 
+          # Switch to product-is directory
+          cd $PRODUCT_IS_PATH
+          
           ISSUE=${{ steps.get_next_queued.outputs.next_issue_number }}
+          echo "Processing next issue: #$ISSUE in ${{ github.repository }}"
 
           # Remove AI-Agent/Queued, add AI-Agent/In-Progress
-          gh issue edit $ISSUE --remove-label "AI-Agent/Queued"
-          gh issue edit $ISSUE --add-label "AI-Agent/In-Progress"
+          gh issue edit $ISSUE --repo ${{ github.repository }} --remove-label "AI-Agent/Queued"
+          gh issue edit $ISSUE --repo ${{ github.repository }} --add-label "AI-Agent/In-Progress"
 
           # Add trigger comment for Claude
-          gh issue comment $ISSUE --body "@wso2-engineering-bot create a PR for this issue following repo conventions"
+          gh issue comment $ISSUE --repo ${{ github.repository }} --body "@wso2-engineering-bot create a PR for this issue following repo conventions"
+          
+          echo "Successfully updated labels and triggered Claude for issue #$ISSUE"
