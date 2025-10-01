@@ -15,7 +15,7 @@
 =========================================
 - MOST IMPORTANT: You MUST first fetch and analyze the issue from the ranuka-laksika/product-is repository before doing any work.
 - MOST IMPORTANT: After analyzing the issue from product-is, you will create fixes in the ranuka-laksika/docs-is repository.
-- MOST IMPORTANT: The docs-is repository has all versions inside the en/identity-server directory. You need to locate ALL appropriate version directories that are affected by the issue.
+- MOST IMPORTANT: The docs-is repository has all versions inside the en/identity-server directory. You need to fix ALL appropriate version directories that are affected by the issue.
 - MOST IMPORTANT: Create a SINGLE PR that includes changes to ALL affected version directories - DO NOT create separate PRs for each version.
 - MOST IMPORTANT: When pushing changes to GitHub, ONLY push docs-is content to the docs-is repository. NEVER commit or push product-is content to docs-is.
 - MOST IMPORTANT: For ALL git operations (checkout, commit, push) and file operations in the docs-is repository, ALWAYS first navigate to the docs-is directory with: cd $DOCS_IS_PATH
@@ -25,7 +25,7 @@
   * If not found, search ALL other version directories in the repository
   * If found in another version, copy the image to the current working branch
   * If the image doesn't exist in ANY version, add AI-Agent/Cannot-Fix label and explain why
-  - Refer steps: under this section **Step 5: Image Handling ** under the LABEL-BASED PROCESSING main section.
+  - Refer steps: go to LABEL-BASED PROCESSING section and refer **Step 5: Image Handling ** section.
 - You MUST fix documentation in ALL appropriate version directories based on the issue description.
 - If a file is outside the version directories, fix that common file once.
 - If the issue is related to the file inside the version then fix it inside that specific version and check for other version as well.
@@ -63,19 +63,15 @@
    - If NO version is mentioned in the issue:
      * START with the LATEST_VERSION (${LATEST_VERSION})
      * Work backward from newest to oldest versions systematically
-     * Check the master branch as well
      * Fix ALL affected versions in a single PR
    - IMPORTANT: Even when a specific version is mentioned, you MUST verify if other versions need the same fix
    - Determine ALL version directories that need to be updated based on the issue
    - For files inside version-specific directories (e.g., en/identity-server/), identify ALL affected versions
    - For files outside version directories, make a single change that applies to all versions
    - NEVER skip version checks - always be thorough and comprehensive
-   - For files inside version-specific directories (e.g., en/identity-server/), identify ALL affected versions
-   - For files outside version directories, make a single change that applies to all versions
 
 4. Transition to docs-is repository:
    - After fully understanding the issue from product-is, switch to working in the docs-is repository
-   - Use appropriate API calls or git commands to work with the docs-is repository
    - VERY IMPORTANT: Ensure ALL operations on   docs-is files use the docs-is working directory ($DOCS_IS_PATH)
    - MOST IMPORTANT: ALWAYS execute `cd $DOCS_IS_PATH` before ANY operation on docs-is content
 
@@ -351,6 +347,7 @@ SUCCESS CRITERIA
 - The task is NOT complete until ALL required version directories have been updated in the PR.
 - Only relevant files are changed in each version directory.
 - Fix verified with running the docs-is repository successfully after fixing. How to run --> README.md file of the docs-is repository.
+- MOST IMPORTANT: After successful build, you MUST verify that the reported issue is actually resolved. Building without errors is not sufficient - you must confirm that the specific problem mentioned in the issue has been fixed.
 - MOST IMPORTANT: The PR is comprehensive, includes changes to ALL affected version directories, and targets the master branch of docs-is.
 - MOST IMPORTANT: For all operations on the docs-is repository, you MUST be in the docs-is working directory ($DOCS_IS_PATH).
 - MOST IMPORTANT: Only docs-is content is ever pushed to the docs-is repository. NEVER push product-is content to docs-is.
