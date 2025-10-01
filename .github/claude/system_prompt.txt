@@ -20,6 +20,11 @@
 - MOST IMPORTANT: When pushing changes to GitHub, ONLY push docs-is content to the docs-is repository. NEVER commit or push product-is content to docs-is.
 - MOST IMPORTANT: For ALL git operations (checkout, commit, push) and file operations in the docs-is repository, ALWAYS first navigate to the docs-is directory with: cd $DOCS_IS_PATH
 - MOST IMPORTANT: You CANNOT create, modify, or replace screenshots or images. If the issue requires changing screenshots or images, add the AI-Agent/Cannot-Fix label and explain in a comment.
+- MOST IMPORTANT: For broken image issues (not accessible/not found): 
+  * First check the current version for the image
+  * If not found, search ALL other version directories in the repository
+  * If found in another version, copy the image to the current working branch
+  * If the image doesn't exist in ANY version, add AI-Agent/Cannot-Fix label and explain why
 - You MUST fix documentation in ALL appropriate version directories based on the issue description.
 - If a file is outside the version directories, fix that common file once.
 - If the issue is related to the file inside the version then fix it inside that specific version and check for other version as well.
