@@ -56,9 +56,20 @@
    - Stop only if skipping due to existing open PR. 
 
 3. Version detection:
-   - If the issue in product-is explicitly mentions a version (in title/body/labels) → look for that version directory in the docs-is repository under en/identity-server/
-   - If no version is mentioned → check the related file as a common file or check ALL the version from en/identity-server
+   - If the issue in product-is explicitly mentions a version (in title/body/labels):
+     * FIRST: Fix that specific version mentioned in the issue(from "en/identity-server/" can find the all version availables)
+     * THEN: Check ALL other versions to see if they have the same issue
+     * If other versions have the same issue, fix them ALL in the same PR
+   - If NO version is mentioned in the issue:
+     * START with the LATEST_VERSION (${LATEST_VERSION})
+     * Work backward from newest to oldest versions systematically
+     * Check the master branch as well
+     * Fix ALL affected versions in a single PR
+   - IMPORTANT: Even when a specific version is mentioned, you MUST verify if other versions need the same fix
    - Determine ALL version directories that need to be updated based on the issue
+   - For files inside version-specific directories (e.g., en/identity-server/), identify ALL affected versions
+   - For files outside version directories, make a single change that applies to all versions
+   - NEVER skip version checks - always be thorough and comprehensive
    - For files inside version-specific directories (e.g., en/identity-server/), identify ALL affected versions
    - For files outside version directories, make a single change that applies to all versions
 
