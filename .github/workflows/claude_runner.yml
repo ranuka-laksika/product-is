@@ -73,9 +73,10 @@ jobs:
       - name: Checkout target repository (docs-is)
         uses: actions/checkout@v4
         with:
-          repository: wso2/docs-is
+          repository: ranuka-laksika/docs-is
           token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           path: docs-is
+          
           fetch-depth: 0
 
       # Set working directory paths explicitly
