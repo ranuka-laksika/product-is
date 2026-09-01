@@ -1,8 +1,8 @@
 name: Claude Code • Auto PR on Comment
 
-on:
-  issue_comment:
-    types: [created]
+# on:
+#   issue_comment:
+#     types: [created]
   # schedule:
   #   - cron: "0 * * * *" 
   # workflow_dispatch: {}
